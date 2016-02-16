@@ -6,30 +6,44 @@ import android.hardware.Camera.Parameters;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 public class MainActivity extends Activity {
+	private Button torchOn;
+	private Button torchOff;
 	private Camera camera = null;
 	private Parameters parameters = null;
+	private OnClickListener mClickListener = new OnClickListener() {
+		public void onClick(View v) {
+			switch (v.getId()) {
+			case R.id.torchOnButton:
+				camera = Camera.open();
+				parameters = camera.getParameters();
+				parameters.setFlashMode(Parameters.FLASH_MODE_TORCH);// ¿ªÆô
+				camera.setParameters(parameters);
+				break;
+			case R.id.torchOffButton:
+				parameters.setFlashMode(Parameters.FLASH_MODE_OFF);
+				camera.setParameters(parameters);
+				
+			}
+		}
+
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		// Ö±½Ó¿ªÆô
-		camera = Camera.open();
-		parameters = camera.getParameters();
-		parameters.setFlashMode(Parameters.FLASH_MODE_TORCH);// ¿ªÆô
-		camera.setParameters(parameters);
-		try {
-			Thread.currentThread();
-			Thread.sleep(500);//×è¶Ï2Ãë
-			} catch (InterruptedException e) {
-			e.printStackTrace();
-			}
-		parameters.setFlashMode(Parameters.FLASH_MODE_OFF);
-		camera.setParameters(parameters);
-		camera.release();
-		
+	//	try {
+	//		Thread.currentThread();
+	//		Thread.sleep(500);// ×è¶Ï0.5Ãë
+	//	} catch (InterruptedException e) {
+	//		e.printStackTrace();
+	//	}
 
 	}
 
@@ -50,5 +64,10 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	protected void onDestroy() {
+		super.onDestroy();
+		camera.release();
 	}
 }
