@@ -19,7 +19,6 @@ public class MainActivity extends Activity {
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.torchOnButton:
-				camera = Camera.open();
 				parameters = camera.getParameters();
 				parameters.setFlashMode(Parameters.FLASH_MODE_TORCH);// ¿ªÆô
 				camera.setParameters(parameters);
@@ -27,7 +26,7 @@ public class MainActivity extends Activity {
 			case R.id.torchOffButton:
 				parameters.setFlashMode(Parameters.FLASH_MODE_OFF);
 				camera.setParameters(parameters);
-				
+
 			}
 		}
 
@@ -37,13 +36,18 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		torchOn = (Button) findViewById(R.id.torchOnButton);
+		torchOn.setOnClickListener(mClickListener);
+		torchOff = (Button) findViewById(R.id.torchOffButton);
+		torchOff.setOnClickListener(mClickListener);
+		camera = Camera.open();
 		// Ö±½Ó¿ªÆô
-	//	try {
-	//		Thread.currentThread();
-	//		Thread.sleep(500);// ×è¶Ï0.5Ãë
-	//	} catch (InterruptedException e) {
-	//		e.printStackTrace();
-	//	}
+		// try {
+		// Thread.currentThread();
+		// Thread.sleep(500);// ×è¶Ï0.5Ãë
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
 
 	}
 
