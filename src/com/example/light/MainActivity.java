@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,25 +13,28 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
 	private Button torchOn;
-	private Button torchOff;
 	private Camera camera = null;
 	private Parameters parameters = null;
+	private int flagFlashMode=0;
 	private OnClickListener mClickListener = new OnClickListener() {
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.torchOnButton:
 				parameters = camera.getParameters();
-				parameters.setFlashMode(Parameters.FLASH_MODE_TORCH);// 开启
-				camera.setParameters(parameters);
-				break;
-			case R.id.torchOffButton:
-				parameters.setFlashMode(Parameters.FLASH_MODE_OFF);
-				camera.setParameters(parameters);
-
-			}
+				if (flagFlashMode==0) {
+					parameters.setFlashMode(Parameters.FLASH_MODE_TORCH);
+					camera.setParameters(parameters);
+					flagFlashMode=1;
+				} else {
+					parameters.setFlashMode(Parameters.FLASH_MODE_OFF);// 开启
+					camera.setParameters(parameters);
+					flagFlashMode=0;
+				}
+break;
 		}
-
-	};
+		
+	}
+		};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +42,6 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		torchOn = (Button) findViewById(R.id.torchOnButton);
 		torchOn.setOnClickListener(mClickListener);
-		torchOff = (Button) findViewById(R.id.torchOffButton);
-		torchOff.setOnClickListener(mClickListener);
 		camera = Camera.open();
 		// 直接开启
 		// try {
