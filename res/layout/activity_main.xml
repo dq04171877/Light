@@ -8,10 +8,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.light.MainActivity" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
     <Button
         android:id="@+id/torchOnButton"
         android:layout_width="wrap_content"
@@ -20,5 +16,16 @@
         android:layout_marginTop="24dp"
         android:background="@drawable/button_torch_on"
         android:onClick="onClickTorchOn" />
+
+    <EditText
+        android:id="@+id/mEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/torchOnButton"
+        android:layout_marginLeft="11dp"
+        android:layout_marginTop="224dp" 
+        android:ems="16"
+        android:textColor="#191970"
+        android:hint="@string/input"/>
 
 </RelativeLayout>

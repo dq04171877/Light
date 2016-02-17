@@ -4,18 +4,22 @@ import android.app.Activity;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends Activity {
-	private Button torchOn;
+	private Button torchOnOrOff;
 	private Camera camera = null;
 	private Parameters parameters = null;
 	private int flagFlashMode=0;
+	private EditText mEditText=null;
 	private OnClickListener mClickListener = new OnClickListener() {
 		public void onClick(View v) {
 			switch (v.getId()) {
@@ -40,9 +44,10 @@ break;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		torchOn = (Button) findViewById(R.id.torchOnButton);
-		torchOn.setOnClickListener(mClickListener);
+		torchOnOrOff = (Button) findViewById(R.id.torchOnButton);
+		torchOnOrOff.setOnClickListener(mClickListener);
 		camera = Camera.open();
+		mEditText=(EditText)findViewById(R.id.mEditText);
 		// Ö±½Ó¿ªÆô
 		// try {
 		// Thread.currentThread();
@@ -50,7 +55,27 @@ break;
 		// } catch (InterruptedException e) {
 		// e.printStackTrace();
 		// }
+		mEditText.addTextChangedListener(new TextWatcher(){
 
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				// TODO Auto-generated method stub
+				
+			}});
 	}
 
 	@Override
