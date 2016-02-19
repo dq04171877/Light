@@ -16,29 +16,65 @@ import android.widget.EditText;
 
 public class MainActivity extends Activity {
 	private Button torchOnOrOff;
+	private EditText mEditText = null;
+	private Button send;
 	private Camera camera = null;
 	private Parameters parameters = null;
-	private int flagFlashMode=0;
-	private EditText mEditText=null;
+	private int flagFlashMode = 0;
+	private String textsended;
 	private OnClickListener mClickListener = new OnClickListener() {
 		public void onClick(View v) {
+			parameters = camera.getParameters();
 			switch (v.getId()) {
 			case R.id.torchOnButton:
-				parameters = camera.getParameters();
-				if (flagFlashMode==0) {
+				if (flagFlashMode == 0) {
 					parameters.setFlashMode(Parameters.FLASH_MODE_TORCH);
 					camera.setParameters(parameters);
-					flagFlashMode=1;
+					flagFlashMode = 1;
 				} else {
 					parameters.setFlashMode(Parameters.FLASH_MODE_OFF);// ¿ªÆô
 					camera.setParameters(parameters);
-					flagFlashMode=0;
+					flagFlashMode = 0;
 				}
-break;
+			case R.id.SendButton:
+				char[] b = textsended.toCharArray();
+				String c = null;
+				char[] d = null;
+				for (int i = 0; i < b.length; i++) {
+					c = Integer.toBinaryString((int) b[i]);
+					d = c.toCharArray();
+					for (int j = 0; j < d.length; j++) {
+						if (d[j] == '0') {
+							try {
+								parameters
+										.setFlashMode(Parameters.FLASH_MODE_OFF);
+								camera.setParameters(parameters);
+								Thread.currentThread();
+								Thread.sleep(500);// ×è¶Ï0.5Ãë
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						} else {
+							try {
+								parameters
+										.setFlashMode(Parameters.FLASH_MODE_TORCH);
+								camera.setParameters(parameters);
+								Thread.currentThread();
+								Thread.sleep(500);// ×è¶Ï0.5Ãë
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+
+						}
+					}
+
+				}
+
+				break;
+			}
+
 		}
-		
-	}
-		};
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,36 +82,32 @@ break;
 		setContentView(R.layout.activity_main);
 		torchOnOrOff = (Button) findViewById(R.id.torchOnButton);
 		torchOnOrOff.setOnClickListener(mClickListener);
+		send = (Button) findViewById(R.id.torchOnButton);
+		send.setOnClickListener(mClickListener);
 		camera = Camera.open();
-		mEditText=(EditText)findViewById(R.id.mEditText);
-		// Ö±½Ó¿ªÆô
-		// try {
-		// Thread.currentThread();
-		// Thread.sleep(500);// ×è¶Ï0.5Ãë
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		mEditText.addTextChangedListener(new TextWatcher(){
+		mEditText = (EditText) findViewById(R.id.mEditText);
+		mEditText.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void afterTextChanged(Editable arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1,
 					int arg2, int arg3) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {
-				// TODO Auto-generated method stub
-				
-			}});
+				textsended = arg0.toString();
+
+			}
+		});
 	}
 
 	@Override
