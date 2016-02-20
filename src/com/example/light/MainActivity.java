@@ -6,13 +6,13 @@ import android.hardware.Camera.Parameters;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private Button torchOnOrOff;
@@ -21,10 +21,9 @@ public class MainActivity extends Activity {
 	private Camera camera = null;
 	private Parameters parameters = null;
 	private int flagFlashMode = 0;
-	private String textsended;
+	private String textsended = null;
 	private OnClickListener mClickListener = new OnClickListener() {
 		public void onClick(View v) {
-			parameters = camera.getParameters();
 			switch (v.getId()) {
 			case R.id.torchOnButton:
 				if (flagFlashMode == 0) {
@@ -36,40 +35,45 @@ public class MainActivity extends Activity {
 					camera.setParameters(parameters);
 					flagFlashMode = 0;
 				}
+				break;
 			case R.id.SendButton:
-				char[] b = textsended.toCharArray();
-				String c = null;
-				char[] d = null;
-				for (int i = 0; i < b.length; i++) {
-					c = Integer.toBinaryString((int) b[i]);
-					d = c.toCharArray();
-					for (int j = 0; j < d.length; j++) {
-						if (d[j] == '0') {
-							try {
-								parameters
-										.setFlashMode(Parameters.FLASH_MODE_OFF);
-								camera.setParameters(parameters);
-								Thread.currentThread();
-								Thread.sleep(500);// 阻断0.5秒
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						} else {
-							try {
-								parameters
-										.setFlashMode(Parameters.FLASH_MODE_TORCH);
-								camera.setParameters(parameters);
-								Thread.currentThread();
-								Thread.sleep(500);// 阻断0.5秒
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
+				if (textsended.isEmpty()) {
+					Toast.makeText(getApplicationContext(), "请输入要发送的文本",
+							Toast.LENGTH_SHORT).show();
+				} else {
+					char[] b = textsended.toCharArray();
+					String c = null;
+					char[] d = null;
+					for (int i = 0; i < b.length; i++) {
+						c = Integer.toBinaryString((int) b[i]);
+						d = c.toCharArray();
+						for (int j = 0; j < d.length; j++) {
+							if (d[j] == '0') {
+								try {
+									parameters
+											.setFlashMode(Parameters.FLASH_MODE_OFF);
+									camera.setParameters(parameters);
+									Thread.currentThread();
+									Thread.sleep(500);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							} else {
+								try {
+									parameters
+											.setFlashMode(Parameters.FLASH_MODE_TORCH);
+									camera.setParameters(parameters);
+									Thread.currentThread();
+									Thread.sleep(500);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
 
+							}
 						}
+
 					}
-
 				}
-
 				break;
 			}
 
@@ -82,9 +86,11 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		torchOnOrOff = (Button) findViewById(R.id.torchOnButton);
 		torchOnOrOff.setOnClickListener(mClickListener);
-		send = (Button) findViewById(R.id.torchOnButton);
+		send = (Button) findViewById(R.id.SendButton);
 		send.setOnClickListener(mClickListener);
+		send.setEnabled(false);
 		camera = Camera.open();
+		parameters = camera.getParameters();
 		mEditText = (EditText) findViewById(R.id.mEditText);
 		mEditText.addTextChangedListener(new TextWatcher() {
 
@@ -97,14 +103,16 @@ public class MainActivity extends Activity {
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1,
 					int arg2, int arg3) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {
-				textsended = arg0.toString();
+				if (arg0.length() != 0) {
+					textsended = arg0.toString();
+					send.setEnabled(true);
+				}
 
 			}
 		});
