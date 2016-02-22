@@ -6,6 +6,7 @@ import android.hardware.Camera.Parameters;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,7 +55,7 @@ public class MainActivity extends Activity {
 											.setFlashMode(Parameters.FLASH_MODE_OFF);
 									camera.setParameters(parameters);
 									Thread.currentThread();
-									Thread.sleep(500);
+									Thread.sleep(10);
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}
@@ -64,7 +65,7 @@ public class MainActivity extends Activity {
 											.setFlashMode(Parameters.FLASH_MODE_TORCH);
 									camera.setParameters(parameters);
 									Thread.currentThread();
-									Thread.sleep(500);
+									Thread.sleep(10);
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}
@@ -82,14 +83,16 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);	
 		setContentView(R.layout.activity_main);
-		torchOnOrOff = (Button) findViewById(R.id.torchOnButton);
-		torchOnOrOff.setOnClickListener(mClickListener);
-		send = (Button) findViewById(R.id.SendButton);
-		send.setOnClickListener(mClickListener);
+		send = (Button) findViewById(R.id.SendButton);		
+		send.setOnClickListener(mClickListener);		
 		send.setEnabled(false);
-		camera = Camera.open();
+Log.e(" 1", "2");
+		torchOnOrOff = (Button) findViewById(R.id.torchOnButton);
+		Log.e(" 2", "2");
+		torchOnOrOff.setOnClickListener(mClickListener);	
+		camera = Camera.open();		
 		parameters = camera.getParameters();
 		mEditText = (EditText) findViewById(R.id.mEditText);
 		mEditText.addTextChangedListener(new TextWatcher() {
